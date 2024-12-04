@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block title %}Trendings{% endblock %}
+
+{% block content %}
+<h1>Danh sách khách hàng và mặt hàng tiềm năng nhất tính tới thời điểm hiện tại</h1>
+
+<!-- Top Products Table -->
+<h2>Top 5 Mặt hàng bán chạy</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Tên mặt hàng</th>
+            <th>Tổng sản lượng mặt hàng được bán</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for product in top_products %}
+        <tr>
+            <td>{{ product.product__name }}</td>
+            <td>{{ product.total_quantity }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- Top Customers Table -->
+<h2>Top 5 Khách hàng tiềm năng</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Tên khách hàng</th>
+            <th>Tổng chi phí chi tiêu (VND)</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for customer in top_customers %}
+        <tr>
+            <td>{{ customer.customer_name }}</td>
+            <td>{{ customer.total_spending|floatformat:0 }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- Chart.js Library -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Pie Chart for Top Products -->
+<h2>Biểu đồ mặt hàng bán chạy</h2>
+<canvas id="topProductsChart" width="400" height="400"></canvas>
+<script>
+    const productCtx = document.getElementById('topProductsChart').getContext('2d');
+    new Chart(productCtx, {
+        type: 'pie',
+        data: {
+            labels: {{ product_labels|safe }},
+            datasets: [{
+                data: {{ product_quantities|safe }},
+                backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'top' },
+                title: { display: true, text: 'Top 5 Mặt hàng bán chạy' }
+            }
+        }
+    });
+</script>
+
+<!-- Pie Chart for Top Customers -->
+<h2>Biểu đồ khách hàng tiềm năng</h2>
+<canvas id="topCustomersChart" width="400" height="400"></canvas>
+<script>
+    const customerCtx = document.getElementById('topCustomersChart').getContext('2d');
+    new Chart(customerCtx, {
+        type: 'pie',
+        data: {
+            labels: {{ customer_labels|safe }},
+            datasets: [{
+                data: {{ customer_spending|safe }},
+                backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'top' },
+                title: { display: true, text: 'Top 5 Khách hàng tiềm năng' }
+            }
+        }
+    });
+</script>
+{% endblock %}

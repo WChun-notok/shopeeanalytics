@@ -1,0 +1,39 @@
+<!-- templates/data_analyzer/evaluate_product_potential.html -->
+
+{% extends 'base.html' %}
+{% block title %}Báo cáo danh sách mặt hàng tiềm năng{% endblock %}
+
+{% block content %}
+<h2>Báo cáo danh sách mặt hàng tiềm năng</h2>
+
+<div style="text-align: center; margin-bottom: 20px;">
+    <img src="data:image/png;base64,{{ chart }}" alt="Revenue Chart">
+</div>
+
+<h3>Danh sách mặt hàng tiềm năng</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Mặt hàng</th>
+            <th>Tổng doanh thu (VND)</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for product in high_potential_products %}
+        <tr>
+            <td>{{ product.product__name }}</td>
+            <td>{{ product.total_revenue|floatformat:0 }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h3>Hướng giải quyết các mặt hàng nhằm nâng cao chất lượng sản phẩm</h3>
+<ul>
+    {% for suggestion in suggestions %}
+    <li>
+        <strong>{{ suggestion.product_name }}</strong>: {{ suggestion.plan }}
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}

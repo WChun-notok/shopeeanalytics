@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block title %}Revenue Chart{% endblock %}
+
+{% block content %}
+<h2>Biểu đồ doanh thu hàng tháng</h2>
+<div style="width: 100%; margin: auto;">
+    <canvas id="revenueChart"></canvas>
+</div>
+
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // Fetch data from Django view
+    fetch("{% url 'revenue_data' %}")
+        .then(response => response.json())
+        .then(data => {
+            const ctx = document.getElementById('revenueChart').getContext('2d');
+            const revenueChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.months,
+                    datasets: [{
+                        label: 'Doanh thu hàng tháng tính tới nay (VND)',
+                        data: data.revenues,
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4  // Curve the line for a smooth look
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        },
+                        title: {
+                            display: true,
+                            text: 'Monthly Revenue Over Time'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Doanh thu (VND)'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Tháng'
+                            }
+                        }
+                    }
+                }
+            });
+        })
+        .catch(error => console.error('Error loading chart data:', error));
+});
+</script>
+{% endblock %}

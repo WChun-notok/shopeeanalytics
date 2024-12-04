@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Kết quả tìm kiếm{% endblock %}
+
+{% block content %}
+<h2>Kết quả tìm kiếm cho từ khóa "{{ keyword_entry.keyword }}"</h2>
+<p>Số lần tìm kiếm: {{ keyword_entry.search_count }}</p>
+<p>Đánh giá trung bình: {{ keyword_entry.average_rating }}</p>
+<p>Lần tìm kiếm cuối cùng: {{ keyword_entry.last_searched }}</p>
+
+<h3>Đánh giá sản phẩm:</h3>
+<ul>
+    {% for review in reviews %}
+        <li>{{ review.review }} - Đánh giá: {{ review.rating }}</li>
+    {% endfor %}
+</ul>
+{% endblock %}

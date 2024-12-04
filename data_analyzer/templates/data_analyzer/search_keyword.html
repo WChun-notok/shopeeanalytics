@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}Tìm kiếm từ khóa{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Tìm kiếm từ khóa để đánh giá sản phẩm</h2>
+
+    <form method="post" action="{% url 'search_keyword' %}">
+        {% csrf_token %}
+        <input type="text" name="keyword" placeholder="Nhập từ khóa sản phẩm..." required>
+        <button type="submit">Tìm kiếm</button>
+    </form>
+
+    {% if keyword_entry %}
+        <h3>Kết quả tìm kiếm cho từ khóa "{{ keyword_entry.keyword }}"</h3>
+        <p>Số lần tìm kiếm: {{ keyword_entry.search_count }}</p>
+        <p>Đánh giá trung bình: {{ keyword_entry.average_rating }}</p>
+        <p>Lần tìm kiếm cuối cùng: {{ keyword_entry.last_searched }}</p>
+
+        <h3>Đánh giá sản phẩm:</h3>
+        <ul>
+            {% for review in reviews %}
+                <li>{{ review.review }} - Đánh giá: {{ review.rating }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,241 @@
+{% extends 'base.html' %}
+
+{% block title %}Trang Chủ{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Chào mừng đến với Shopee Analytics</h1>
+<!-- templates/homepage.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopee Analytics - Dashboard</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+<style>        
+    .myButton {
+        box-shadow: 3px 4px 0px 0px #3e7327;
+        background:linear-gradient(to bottom, #77b55a 5%, #72b352 100%);
+        background-color:#77b55a;
+        border-radius:18px;
+        border:1px solid #4b8f29;
+        display:inline-block;
+        cursor:pointer;
+        color:#ffffff;
+        font-family:Arial;
+        font-size:17px;
+        padding:7px 25px;
+        text-decoration:none;
+        text-shadow:0px 1px 0px #5b8a3c;
+    }
+    .myButton:hover {
+        background:linear-gradient(to bottom, #72b352 5%, #77b55a 100%);
+        background-color:#72b352;
+    }
+    .myButton:active {
+        position:relative;
+        top:1px;
+    }        
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    h1, h2 {
+        color: #343a40;
+    }
+    .dashboard {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        margin-bottom: 30px;
+    }
+    .dashboard-item {
+        width: 30%;
+        padding: 20px;
+        background-color: #ffffff;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+    .table-container {
+        margin-top: 40px;
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+    table, th, td {
+        border: 1px solid #dee2e6;
+    }
+    th, td {
+        padding: 10px;
+        text-align: center;
+    }
+    th {
+        background-color: #343a40;
+        color: #ffffff;
+    }
+    .chart {
+        margin-top: 40px;
+        padding: 20px;
+        background-color: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }    
+</style>
+</head>
+<body>
+    <div class="container">
+        <h1>Shopee Analytics - Dashboard</h1>        
+        <!-- Thông tin tổng quan -->
+        <div class="dashboard">
+            <div class="dashboard-item">
+                <h2>Doanh thu theo tháng</h2>
+                <p>{{ monthly_sales|length }} tháng</p>
+            </div>
+            <div class="dashboard-item">
+                <h2>Doanh thu theo quý</h2>
+                <p>{{ quarterly_sales|length }} quý</p>
+            </div>
+            <div class="dashboard-item">
+                <h2>Doanh thu theo năm</h2>
+                <p>{{ yearly_sales|length }} năm</p>
+            </div>
+        </div>
+        <!-- Thêm nút Export để tải dữ liệu doanh thu -->
+        <div class="export-button">
+            <a href="{% url 'export_sales' %}" class="myButton">Export Doanh Thu (CSV)</a>
+        </div>           
+        
+        <!-- Bảng doanh thu chi tiết -->
+        <div class="table-container">            
+            <h2>Doanh thu theo tháng</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tháng</th>
+                        <th>Tổng Doanh Thu (VND)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for sale in monthly_sales %}
+                    <tr>
+                        <!-- Sử dụng bộ lọc 'date' của Django để định dạng tháng -->
+                        <td>{{ sale.month|date:"Y-m" }}</td>
+                        <td>{{ sale.total_revenue|floatformat:0 }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <h2>Doanh thu theo quý</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Quý</th>
+                        <th>Tổng Doanh Thu (VND)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for sale in quarterly_sales %}
+                    <tr>
+                        <!-- Định dạng quý theo năm -->
+                        <td>Quý {{ sale.quarter|date:"Y Q" }}</td>
+                        <td>{{ sale.total_revenue|floatformat:0 }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <h2>Doanh thu theo năm</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Năm</th>
+                        <th>Tổng Doanh Thu (VND)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for sale in yearly_sales %}
+                    <tr>
+                        <td>{{ sale.year.year }}</td>
+                        <td>{{ sale.total_revenue|floatformat:0 }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    <!-- Thêm thư viện Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<div class="chart-container" style="position: relative; height:400px; width:80%">
+    <canvas id="salesChart"></canvas>
+</div>
+
+<script>
+    // Lấy dữ liệu từ view và chuẩn bị biểu đồ
+    const salesData = {{ monthly_sales|safe }}; // Sử dụng `|safe` để đảm bảo dữ liệu JSON đúng định dạng
+
+    // Tạo danh sách các tháng và doanh thu tương ứng
+    const labels = salesData.map(data => new Date(data.sale_date).toLocaleDateString('vi-VN', { month: 'short', year: 'numeric' }));
+    const revenue = salesData.map(data => data.total_revenue);
+
+    const ctx = document.getElementById('salesChart').getContext('2d');
+    const salesChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Doanh thu theo tháng (VND)',
+                data: revenue,
+                borderColor: 'rgba(75, 192, 192, 1)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderWidth: 2,
+                fill: true,
+                tension: 0.4 // Tạo độ cong cho đường biểu đồ
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: true,
+                    text: 'Biểu đồ doanh thu theo tháng'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Doanh thu (VND)'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Tháng'
+                    }
+                }
+            }
+        }
+    });
+</script>
+        
+    </div>
+
+</div>
+{% endblock %}

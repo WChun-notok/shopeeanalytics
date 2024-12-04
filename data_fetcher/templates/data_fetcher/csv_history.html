@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}Lịch sử tệp CSV{% endblock %}
+
+{% block content %}
+<div>
+    <h2>Lịch sử các tệp CSV đã nhập</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Tên tệp</th>
+                <th>Ngày upload</th>
+                <th>Trạng thái</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for file in csv_files %}
+            <tr>
+                <td>{{ file.file_name }}</td>
+                <td>{{ file.upload_date }}</td>
+                <td>{{ file.processed|yesno:"Đã xử lý,Chưa xử lý" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

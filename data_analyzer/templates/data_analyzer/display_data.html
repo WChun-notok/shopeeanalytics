@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}Dữ liệu từ Nguồn Bên Ngoài{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Danh sách sản phẩm từ nguồn bên ngoài</h2>
+    
+    <!-- Thông báo lỗi hoặc thành công -->
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+            <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <table>
+        <thead>
+            <tr>
+                <th>Tên sản phẩm</th>
+                <th>Giá</th>
+                <th>Số lượng</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+            <tr>
+                <td>{{ product.name }}</td>
+                <td>{{ product.price }}</td>
+                <td>{{ product.stock }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

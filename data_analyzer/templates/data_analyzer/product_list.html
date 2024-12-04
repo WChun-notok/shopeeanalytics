@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Trang Chủ{% endblock %}
+
+{% block content %}
+
+    <title>Danh sách sản phẩm</title>
+    <style>
+
+        .product-info {
+            flex-grow: 1;
+        }
+        .product-name {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .price {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+        }
+        .stock {
+            font-size: 14px;
+            color: gray;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Danh sách sản phẩm</h1>
+        <ul>
+            {% for product in products %}
+            <li>
+                <div class="product-info">
+                    <span class="product-name">{{ product.name }}</span> - 
+                    <span class="price">Giá: {{ product.price }}</span> - 
+                    <span class="stock">Số lượng: {{ product.stock }}</span>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+{% endblock %}

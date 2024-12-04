@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Upload CSV và XSLT{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Upload CSV và XSLT</h2>
+    
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Upload</button>
+    </form>
+
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</div>
+{% endblock %}

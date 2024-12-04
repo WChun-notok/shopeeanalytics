@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Report</title>
+    <style>
+        @font-face {
+            font-family: 'Roboto';
+            src: url("{{ STATIC_URL }}fonts/Roboto-Regular.ttf") format("truetype");
+        }
+
+        h1, h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f4f4f4;
+        }
+    </style>
+</head>
+<body>
+    <h1>Báo cáo sản phẩm</h1>
+    <h2>Số liệu thống kê</h2>
+    <ul>
+        <li>Tổng số sản phẩm: {{ statistics.total_products }}</li>
+        <li>Tổng doanh thu: {{ statistics.total_revenue|floatformat:0 }}</li>
+        <li>Giá trung bình: {{ statistics.average_price|floatformat:0 }}</li>
+        <li>Giá cao nhất: {{ statistics.max_price|floatformat:0 }}</li>
+        <li>Giá thấp nhất: {{ statistics.min_price|floatformat:0 }}</li>
+    </ul>
+</body>
+</html>

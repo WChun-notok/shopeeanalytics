@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Product Potential Analysis{% endblock %}
+
+{% block content %}
+<h1>Dự đoán xu hướng doanh thu</h1>
+
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% else %}
+        <h2>Biểu đồ xu hướng</h2>
+        <img src="data:image/png;base64,{{ chart }}" alt="Biểu đồ xu hướng doanh thu">
+
+        <h2>Dự đoán doanh thu trong 12 tháng tới</h2>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Tháng</th>
+                    <th>Doanh thu dự đoán (VND)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for month, prediction in future_predictions %}
+                <tr>
+                    <td>{{ month }}</td>
+                    <td>{{ prediction|floatformat:2 }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+{% endblock %}

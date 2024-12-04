@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}Voucher Details{% endblock %}
+
+{% block content %}
+<h2>Chi tiết Voucher</h2>
+
+<div>
+    <p><strong>Mã Voucher:</strong> {{ voucher.code }}</p>
+    <p><strong>Giá trị giảm giá:</strong> {{ voucher.discount_value|floatformat:2 }} VND</p>
+    <p><strong>Ngày hết hạn:</strong> {{ voucher.expiration_date }}</p>
+    <p><strong>Trạng thái:</strong> 
+        {% if voucher.is_valid %}
+            <span style="color: green;">Còn hiệu lực</span>
+        {% else %}
+            <span style="color: red;">Hết hạn</span>
+        {% endif %}
+    </p>
+</div>
+
+{% if related_order %}
+<h3>Thông tin Đơn hàng liên quan</h3>
+<div>
+    <p><strong>Tên khách hàng:</strong> {{ related_order.customer_name }}</p>
+    <p><strong>Sản phẩm:</strong> {{ related_order.product.name }}</p>
+    <p><strong>Số lượng:</strong> {{ related_order.quantity }}</p>
+    <p><strong>Tổng giá:</strong> {{ related_order.total_price|floatformat:2 }} VND</p>
+    <p><strong>Ngày đặt hàng:</strong> {{ related_order.order_date }}</p>
+</div>
+{% else %}
+<p>Không có đơn hàng liên quan đến voucher này.</p>
+{% endif %}
+
+<a href="{% url 'voucher_list' %}" class="btn btn-secondary">Quay lại danh sách Voucher</a>
+{% endblock %}

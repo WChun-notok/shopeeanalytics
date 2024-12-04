@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}Filter Products by Revenue{% endblock %}
+
+{% block content %}
+<h3>Lọc sản phẩm dựa theo doanh thu</h3>
+
+<!-- Form Lọc Doanh Thu -->
+<form method="get">
+    <label for="min_revenue">Doanh thu tối thiểu (VND):</label>
+    <input type="number" name="min_revenue" id="min_revenue" value="{{ min_revenue }}" placeholder="Ví dụ: 1000000">
+
+    <label for="max_revenue">Doanh thu tối đa (VND):</label>
+    <input type="number" name="max_revenue" id="max_revenue" value="{{ max_revenue }}" placeholder="Ví dụ: 5000000">
+
+    <button type="submit">Lọc</button>
+</form>
+<!-- Danh sách sản phẩm -->
+<table>
+    <thead>
+        <tr>
+            <th>Tên sản phẩm</th>
+            <th>Doanh thu</th>
+            <th>Số lượng còn trong kho</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for product in products %}
+        <tr>
+            <td>{{ product.name }}</td>
+            <td>{{ product.total_revenue|floatformat:2 }} VND</td>
+            <td>{{ product.stock }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="3">Không có sản phẩm nào phù hợp.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<a href="{% url 'product_list' %}" class="btn btn-secondary">Quay lại danh sách sản phẩm</a>
+{% endblock %}

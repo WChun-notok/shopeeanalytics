@@ -1,0 +1,29 @@
+<!-- templates/data_analyzer/sales_list.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Danh sách doanh số</title>
+</head>
+<body>
+    <h1>Danh sách doanh số</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Ngày</th>
+                <th>Tổng số đơn hàng</th>
+                <th>Tổng doanh thu</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for sale in sales %}
+            <tr>
+                <td>{{ sale.sale_date }}</td>
+                <td>{{ sale.total_orders }}</td>
+                <td>{{ sale.total_revenue }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
